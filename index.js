@@ -1,12 +1,11 @@
 
 const db = require("./scripts/connection.js");
 const { prompt } = require("inquirer");
-// const { viewAllEmployees, createEmployee } = require('./scripts/employees.js');
-// const { viewAllRoles, createRole, updateEmployeeRole } = require('./scripts/roles.js');
-// const { viewAllDepartments, createDepartment } = require('./scripts/departments.js');
+const consoleTable = require("console.table");
+const { viewAllEmployees, createEmployee } = require('./scripts/employees.js');
+const { viewAllRoles, createRole, updateEmployeeRole } = require('./scripts/roles.js');
+const { viewAllDepartments, createDepartment } = require('./scripts/departments.js');
 
-console.log(viewAllDepartments)
-require("console.table");
 
 
 
@@ -14,6 +13,8 @@ init();
 
 // initial function at NPM start
 function init() {
+    console.log("\n==========================\nEmployee Management System\n==========================\n")
+    
     runPrompts();
 }
 
@@ -86,34 +87,13 @@ function runPrompts() {
             case "ADD_ROLE":
                 createRole();
                 break;
+
             default:
                 quit();
         }
     }
     )
 }
-// View all deparments
-function viewAllDepartments() {
-    db.allDepartments()
-        .then(([rows]) => {
-            let departments = rows;
-            console.log("\n");
-            console.table(departments);
-        })
-        .then(() => runPrompts());
-}
-// View all employees
-function viewAllEmployees() {
-    db.allEmployees()
-        .then(([rows]) => {
-            let employees = rows;
-            console.log("\n");
-            console.table(employees);
-        })
-        .then(() => runPrompts());
-}
-
-
 
 
 // Quit the application

@@ -139,9 +139,61 @@ function viewAllEmployees() {
 
 //CREATE EMPLOYEE
 function createEmployee() {
-    console.log("createEmployee");
-    mainMenu();
-    console.table(`\n`);
+    let query =
+        "INSERT INTO employee (first_name,last_name,role,manager_id) VALUES (?, ?, ?, ?)";
+
+    db.queryRole("SELECT * FROM role", (err, res) => {
+        if (err) console.log(err);
+
+        prompt([
+            {
+                type: "input",
+                name: "first_name",
+                message: "What is the name of the new employee?",
+            },
+            {
+                type: "input",
+                name: "last_name",
+                messsage: "What is the last name of the new employee?",
+            },
+            {
+                type: "list",
+                name: "role",
+                message: "What is the role of the new employee?",
+                choices: res.map((role) => {
+                    return {
+                        name: role.title,
+                        value: role.id,
+                    }
+                })
+            },
+                    {
+                type: "list",
+                name: "role",
+                message: "What is the role of the new employee?",
+                choices: res.map((manager_id) => {
+                    return {
+                        name: .title,
+                        value: role.id,
+                    };
+                }),
+            },
+        ])
+            .then((res) => {
+                db.queryRole(
+                    query,
+                    [res.first_name, last_name, res.role, res.manager_id],
+                    (err, res) => {
+                        if (err) {
+                            console.log(err);
+                            return;
+                        }
+                        console.log(`Role has been created\n`);
+                        mainMenu();
+                    }
+                );
+            });
+    });
 }
 
 //VIEW ALL ROLES
@@ -158,10 +210,52 @@ function viewAllRoles() {
 };
 //CREATE ROLE
 function createRole() {
-    console.log("createRole");
-    mainMenu();
-    console.table(`\n`);
+    let query =
+        "INSERT INTO role (title, salary, department_id) VALUES (?, ?, ?)";
+
+    db.query("SELECT * FROM department", (err, res) => {
+        if (err) console.log(err);
+        
+       prompt([
+                {
+                    type: "input",
+                    name: "title",
+                    message: "What is the name of the new role?",
+                },
+                {
+                    type: "input",
+                    name: "salary",
+                    messsage: "What is the salary of the role?",
+                },
+                {
+                    type: "list",
+                    name: "department_id",
+                    message: "What is the department of the role?",
+                    choices: res.map((department) => {
+                        return {
+                            name: department.name,
+                            value: department.id,
+                        };
+                    }),
+                },
+            ])
+            .then((res) => {
+                db.query(
+                    query,
+                    [res.title, res.salary, res.department_id],
+                    (err, res) => {
+                        if (err) {
+                            console.log(err);
+                            return;
+                        }
+                        console.log(`Role has been created\n`);
+                        mainMenu();
+                    }
+                );
+            });
+    });
 }
+
 
 //UPDATE EMPLOYEE ROLE
 function updateEmployeeRole() {
@@ -185,10 +279,30 @@ function viewAllDepartments() {
 
 //CREATE DEPT
 function createDepartment() {
-    console.log("createDepartment");
-    mainMenu();
-    console.table(`\n`);
+    console.log("CREATE DEPARTMENT\n");
+    let query = "INSERT INTO department (name) VALUES (?)";
+    let params = [];
+            prompt([
+            {
+                type: "input",
+                name: "dept_name",
+                message: "What is the name of the new department?",
+            },
+        ])
+        .then((res) => {
+            params.push(res.dept_name);
+            db.query(query, params, (err, res) => {
+                if (err) console.log(err);
+                console.log(`Added ${params} Department.\n`);
+                mainMenu();
+            });
+        });
 }
+
+
+
+
+
 // QUIT PROGRAM
 function quit() {
     console.log("Terminating Application...\n");
